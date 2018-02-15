@@ -5,6 +5,7 @@ import android.accessibilityservice.GestureDescription;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -16,10 +17,13 @@ import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.util.DisplayMetrics;
+
 import xyz.monkeytong.hongbao.utils.HongbaoSignature;
 import xyz.monkeytong.hongbao.utils.PowerUtil;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HongbaoService extends AccessibilityService implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String WECHAT_DETAILS_EN = "Details";
@@ -220,9 +224,26 @@ public class HongbaoService extends AccessibilityService implements SharedPrefer
 
         //非layout元素
         if (node.getChildCount() == 0) {
-            if ("android.widget.Button".equals(node.getClassName()))
+            if ("android.widget.Button".equals(node.getClassName())) {
+//                if (node != null) {
+//                    node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+////                mTimer.cancel();
+//
+//                    mTimer.schedule(new TimerTask() {
+//                        @Override
+//                        public void run() {
+//                            Intent home = new Intent(Intent.ACTION_MAIN);
+//
+//                            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//
+//                            home.addCategory(Intent.CATEGORY_HOME);
+//
+//                            startActivity(home);
+//                        }
+//                    }, 1000);
+//                }
                 return node;
-            else
+            } else
                 return null;
         }
 
@@ -230,11 +251,32 @@ public class HongbaoService extends AccessibilityService implements SharedPrefer
         AccessibilityNodeInfo button;
         for (int i = 0; i < node.getChildCount(); i++) {
             button = findOpenButton(node.getChild(i));
-            if (button != null)
+            if (button != null) {
+                button.performAction(AccessibilityNodeInfo.ACTION_CLICK);
+//                mTimer.cancel();
+                mMutex = false;mListMutex = false; mChatMutex = false;mLuckyMoneyPicked = false;
+                boolean back = sharedPreferences.getBoolean("home_back", true);
+                if (back) {
+                    mTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            Intent home = new Intent(Intent.ACTION_MAIN);
+
+                            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                            home.addCategory(Intent.CATEGORY_HOME);
+
+                            startActivity(home);
+                        }
+                    }, 1000);
+                }
                 return button;
+            }
         }
         return null;
     }
+
+    Timer mTimer = new Timer();
 
     private void checkNodeInfo(int eventType) {
         if (this.rootNodeInfo == null) return;

@@ -1,7 +1,9 @@
 package xyz.monkeytong.hongbao.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -13,11 +15,16 @@ import xyz.monkeytong.hongbao.utils.UpdateTask;
  * Created by Zhongyi on 2/4/16.
  */
 public class GeneralSettingsFragment extends PreferenceFragment {
+
+    SharedPreferences sharedPreferences;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.general_preferences);
         setPrefListeners();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
     }
 
     private void setPrefListeners() {
@@ -27,6 +34,15 @@ public class GeneralSettingsFragment extends PreferenceFragment {
             public boolean onPreferenceClick(Preference preference) {
                 new UpdateTask(getActivity().getApplicationContext(), true).update();
                 return false;
+            }
+        });
+
+        final CheckBoxPreference homePref = (CheckBoxPreference) findPreference("pref_back_home");
+        homePref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                sharedPreferences.edit().putBoolean("home_back", homePref.isChecked()).commit();
+                return true;
             }
         });
 

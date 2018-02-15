@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back_home">自动返回主界面</string>
+    <string name="back_home_hint">当拆完红包自动将微信退到后台，这样有助于接下来的自动抢红包</string>
+</resources>

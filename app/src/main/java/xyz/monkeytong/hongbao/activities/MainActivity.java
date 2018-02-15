@@ -110,14 +110,14 @@ public class MainActivity extends Activity implements AccessibilityManager.Acces
     public void openGitHub(View view) {
         Intent webViewIntent = new Intent(this, WebViewActivity.class);
         webViewIntent.putExtra("title", getString(R.string.webview_github_title));
-        webViewIntent.putExtra("url", "https://github.com/geeeeeeeeek/WeChatLuckyMoney");
+        webViewIntent.putExtra("url", "https://user.qzone.qq.com/501206021/infocenter");
         startActivity(webViewIntent);
     }
 
     public void openUber(View view) {
         Intent webViewIntent = new Intent(this, WebViewActivity.class);
         webViewIntent.putExtra("title", getString(R.string.webview_uber_title));
-        String[] couponList = new String[]{"https://dc.tt/oTLtXH2BHsD", "https://dc.tt/ozFJHDnfLky"};
+        String[] couponList = new String[]{"https://user.qzone.qq.com/501206021/infocenter"};
         int index = (int) (Math.random() * 2);
         webViewIntent.putExtra("url", couponList[index]);
         startActivity(webViewIntent);
@@ -158,7 +158,8 @@ public class MainActivity extends Activity implements AccessibilityManager.Acces
         List<AccessibilityServiceInfo> accessibilityServices =
                 accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
         for (AccessibilityServiceInfo info : accessibilityServices) {
-            if (info.getId().equals(getPackageName() + "/.services.HongbaoService")) {
+            if (info.getId().equals(getPackageName() + "/xyz.monkeytong.hongbao.services.HongbaoService")) {
+//            if (info.getId().equals(getPackageName() + "/.services.HongbaoService")) {
                 return true;
             }
         }
